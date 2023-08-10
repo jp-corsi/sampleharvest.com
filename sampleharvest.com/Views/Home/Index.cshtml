@@ -1,0 +1,26 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="App">
+    <section class="content">
+        <h1 class="content_title">Sample Converter</h1>
+
+        <form method="post" asp-action="Index" class="form">
+            <input name="youtubeLink" placeholder="Paste YouTube link" class="form_input" type="text" />
+            <button type="submit" class="form_button">Search</button>
+        </form>
+
+        @if (!string.IsNullOrEmpty(ViewBag.DownloadLink))
+        {
+            <div class="download-link">
+                <a href="@ViewBag.DownloadLink" download>@ViewBag.Title</a>
+            </div>
+        }
+
+        @if (ViewBag.Error != null)
+        {
+            <p class="error">@ViewBag.Error</p>
+        }
+    </section>
+</div>
