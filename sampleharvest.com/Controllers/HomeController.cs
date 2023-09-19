@@ -3,6 +3,8 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using sampleharvest.com.Models;
 using sampleharvest.com.Utilities;
+using System.Threading.Tasks;
+using sampleharvest.com.Repository;
 
 namespace sampleharvest.com.Controllers
 {
@@ -43,26 +45,10 @@ namespace sampleharvest.com.Controllers
 
             try
             {
-                string responseJson = await _apiRepository.GetVideoAsync(url, videoType);
+                (string responseJson, object responseObject) = await _apiRepository.GetVideoAsync(url, videoType);
 
                 if (!string.IsNullOrEmpty(responseJson))
                 {
-                    object responseObject = null;
-
-                    // Deserialize the JSON response based on video type
-                    if (videoType.Equals("tiktok", StringComparison.OrdinalIgnoreCase))
-                    {
-                        responseObject = JsonSerializer.Deserialize<TiktokApiResponse>(responseJson);
-                    }
-                    else if (videoType.Equals("instagram", StringComparison.OrdinalIgnoreCase))
-                    {
-                        responseObject = JsonSerializer.Deserialize<InstagramApiResponse>(responseJson);
-                    }
-                    else if (videoType.Equals("youtube", StringComparison.OrdinalIgnoreCase))
-                    {
-                        responseObject = JsonSerializer.Deserialize<YoutubeApiResponse>(responseJson);
-                    }
-
                     if (responseObject != null)
                     {
                         if (videoType.Equals("tiktok", StringComparison.OrdinalIgnoreCase))
@@ -75,7 +61,7 @@ namespace sampleharvest.com.Controllers
                         }
                         else if (videoType.Equals("youtube", StringComparison.OrdinalIgnoreCase))
                         {
-                            ViewBag.DownloadLink = ((YoutubeApiResponse)responseObject).Link;
+                            ViewBag.DownloadLink = ((YoutubeApiResponse)responseObject).urlStream;
                         }
                     }
                     else

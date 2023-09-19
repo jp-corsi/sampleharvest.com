@@ -4,17 +4,22 @@
 
 <div class="App">
     <section class="content">
-        <h1 class="content_title">Sample Converter</h1>
+        <h1 class="content_title" data-value="sampleharvest.com">sampleharvest.com</h1>
+        <p class="content_subtitle">Download Instagram, Youtube, and Tiktok videos by pasting a link below.</p>
 
-        <form method="post" asp-action="Index" class="form">
-            <input name="url" placeholder="Paste Tiktok link" class="form_input" type="text" />
-            <button type="submit" class="form_button">Search</button>
+        <form method="post" asp-action="Index" class="form" id="searchForm">
+            <div class="form-group">
+                <input name="url" placeholder="Paste link here..." class="form_input" type="text" />
+                <button type="submit" class="form_button" id="searchButton" onclick="this.classList.toggle('button--loading')">
+                    <span class="button__text">Go</span>
+                </button>
+            </div>
         </form>
 
         @if (!string.IsNullOrEmpty(ViewBag.DownloadLink))
         {
-            <div class="download-link">
-                <a href="@ViewBag.DownloadLink" download>Download</a>
+            <div class="download_link">
+                <a target="_blank" href="@ViewBag.DownloadLink" download>Download</a>
             </div>
         }
 
@@ -24,3 +29,5 @@
         }
     </section>
 </div>
+
+

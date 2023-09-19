@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Net.Http;
-using sampleharvest.com.Utilities;
+using System.Text.Json;
 using System.Threading.Tasks;
+using sampleharvest.com.Models;
+using sampleharvest.com.Utilities;
 
-namespace sampleharvest.com.Models
+namespace sampleharvest.com.Repository
 {
     public class ApiRepository
     {
@@ -17,7 +19,7 @@ namespace sampleharvest.com.Models
             _urlHelper = new UrlHelper();
         }
 
-        public async Task<string> GetVideoAsync(string videoId, string videoType)
+        public async Task<(string responseJson, object responseObject)> GetVideoAsync(string videoId, string videoType)
         {
             switch (videoType.ToLower())
             {
@@ -28,39 +30,30 @@ namespace sampleharvest.com.Models
                 case "youtube":
                     return await GetYouTubeVideoAsync(videoId);
                 default:
-                    return null; 
+                    return (null, null); // Handle unknown video type as needed
             }
         }
 
-        public async Task<string> GetTikTokVideoAsync(string videoUrl)
+        public async Task<(string responseJson, object responseObject)> GetTikTokVideoAsync(string videoUrl)
         {
             var requestUri = new Uri($"https://tiktok-downloader-download-tiktok-videos-without-watermark.p.rapidapi.com/vid/index?url={videoUrl}");
-            return await SendRequestAsync(requestUri);
+            return await SendRequestAsync(requestUri, typeof(TiktokApiResponse));
         }
 
-        public async Task<string> GetInstagramVideoAsync(string videoUrl)
+        public async Task<(string responseJson, object responseObject)> GetInstagramVideoAsync(string videoUrl)
         {
             var requestUri = new Uri($"https://instagram-downloader-download-instagram-videos-stories.p.rapidapi.com/index?url={Uri.EscapeDataString(videoUrl)}");
-            return await SendRequestAsync(requestUri);
+            return await SendRequestAsync(requestUri, typeof(InstagramApiResponse));
         }
 
-        public async Task<string> GetYouTubeVideoAsync(string videoUrl)
+        public async Task<(string responseJson, object responseObject)> GetYouTubeVideoAsync(string videoUrl)
         {
-            string videoId = _urlHelper.GetYoutubeIdFromLink(videoUrl);
+            var requestUri = new Uri($"https://ytconvert2.p.rapidapi.com/youtube/url/generate?Title=name_music&Url={Uri.EscapeDataString(videoUrl)}&Type=MP3");
+            return await SendRequestAsync(requestUri, typeof(YoutubeApiResponse));
 
-            if (!string.IsNullOrEmpty(videoId))
-            {
-                var requestUri = new Uri($"https://youtube-mp3-download1.p.rapidapi.com/dl?id={videoId}");
-                return await SendRequestAsync(requestUri);
-            }
-            else
-            {
-                // Handle invalid YouTube URL
-                return null;
-            }
         }
 
-        private async Task<string> SendRequestAsync(Uri requestUri)
+        private async Task<(string responseJson, object responseObject)> SendRequestAsync(Uri requestUri, Type responseType)
         {
             var request = new HttpRequestMessage
             {
@@ -73,12 +66,14 @@ namespace sampleharvest.com.Models
             {
                 if (response.IsSuccessStatusCode)
                 {
-                    return await response.Content.ReadAsStringAsync();
+                    var responseJson = await response.Content.ReadAsStringAsync();
+                    var responseObject = JsonSerializer.Deserialize(responseJson, responseType);
+                    return (responseJson, responseObject);
                 }
                 else
                 {
                     // Handle error as needed
-                    return null;
+                    return (null, null);
                 }
             }
         }

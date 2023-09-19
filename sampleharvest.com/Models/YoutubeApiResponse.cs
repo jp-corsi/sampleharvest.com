@@ -5,23 +5,18 @@ namespace sampleharvest.com.Models
 {
     public class YoutubeApiResponse
     {
-        [JsonPropertyName("link")]
-        public string Link { get; set; }
+        [JsonPropertyName("urlDownload")]
+        public string urlDownload { get; set; }
 
-        [JsonPropertyName("title")]
-        public string Title { get; set; }
+        [JsonPropertyName("urlStream")]
+        public string urlStream { get; set; }
 
-        [JsonPropertyName("progress")]
-        public int Progress { get; set; }
+        [JsonPropertyName("keyDownload")]
+        public string keyDownload { get; set; }
 
-        [JsonPropertyName("duration")]
-        public double Duration { get; set; }
+        [JsonPropertyName("keyStream")]
+        public string keyStream { get; set; }
 
-        [JsonPropertyName("status")]
-        public string Status { get; set; }
-
-        [JsonPropertyName("msg")]
-        public string Msg { get; set; }
     }
 }
 

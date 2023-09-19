@@ -1,4 +1,4 @@
-﻿using sampleharvest.com.Models;
+﻿using sampleharvest.com.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
