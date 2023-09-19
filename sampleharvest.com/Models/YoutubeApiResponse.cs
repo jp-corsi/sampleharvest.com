@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace sampleharvest.com.Models
 {
-    public class ApiResponse
+    public class YoutubeApiResponse
     {
         [JsonPropertyName("link")]
         public string Link { get; set; }
