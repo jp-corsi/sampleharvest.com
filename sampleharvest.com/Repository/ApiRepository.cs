@@ -15,7 +15,7 @@ namespace sampleharvest.com.Repository
         public ApiRepository()
         {
             _httpClient = new HttpClient();
-            _httpClient.DefaultRequestHeaders.Add("X-RapidAPI-Key", "c12758149bmsh95bf845b317bc1ep161d81jsn2a02f1f9a9d5");
+            _httpClient.DefaultRequestHeaders.Add("X-RapidAPI-Key", "");
             _urlHelper = new UrlHelper();
         }
 
